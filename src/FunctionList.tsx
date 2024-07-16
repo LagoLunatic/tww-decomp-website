@@ -15,7 +15,7 @@ export const FileName = (path: string): string => {
 export function GithubLink(path: string): string {
   return (
     "https://github.com/zeldaret/tww/blob/main/src/" +
-    path.replace("framework/", "") +
+    path.substring(path.indexOf("/") + 1) +
     ".cpp" // TODO: this won't work for C files
   );
 }
