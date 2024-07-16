@@ -1,6 +1,6 @@
 import { Unit } from "./progress";
 import "./css/heatmap.css";
-import { Tooltip, Text } from "@mantine/core";
+import { Tooltip, Text, Tabs } from "@mantine/core";
 import { prettyPercent } from "./helpers";
 import { FileMetricData } from "./FileMetric";
 
@@ -73,11 +73,8 @@ export function FileHeatmap({
   };
 
   return (
-    <div>
-      <Text fw={700} size={"lg"}>
-        {folderName}
-      </Text>
+    <Tabs.Panel value={folderName}>
       <UnitGrid units={fileInfos} />
-    </div>
+    </Tabs.Panel>
   );
 }

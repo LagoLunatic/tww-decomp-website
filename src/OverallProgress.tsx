@@ -5,6 +5,7 @@ import {
   Container,
   TextInput,
   ProgressSection,
+  Tabs,
 } from "@mantine/core";
 import { ProgressReport, Unit } from "./progress";
 import { prettyPercent } from "./helpers";
@@ -171,7 +172,14 @@ export function OverallProgress() {
                 onChange={(value) => setHighlightMetric(value as FileMetric)}
               />
             </Group>
-            <div>
+            <Tabs defaultValue="TWW Game Code">
+              <Tabs.List>
+              {allFolders.map((folder, index) => (
+                <Tabs.Tab value={folder.name}>
+                  {folder.name}
+                </Tabs.Tab>
+              ))}
+              </Tabs.List>
               {allFolders.map((folder, index) => (
                 <FileHeatmap
                   key={index}
@@ -184,7 +192,7 @@ export function OverallProgress() {
                   }
                 />
               ))}
-            </div>
+            </Tabs>
           </Stack>
           {unit && <SourceFileInfo unit={unit} />}
         </Group>
