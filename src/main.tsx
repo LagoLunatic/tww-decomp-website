@@ -18,9 +18,27 @@ import { Notifications } from "@mantine/notifications";
 // import '@mantine/dropzone/styles.css';
 // import '@mantine/code-highlight/styles.css';
 // ...
+import { Select, MultiSelect } from "@mantine/core";
 
 const theme = createTheme({
-  //
+  components: {
+    Select: Select.extend({
+      defaultProps: {
+        scrollAreaProps: {
+          type: 'auto',
+          scrollbarSize: 8,
+        }
+      },
+    }),
+    MultiSelect: MultiSelect.extend({
+      defaultProps: {
+        scrollAreaProps: {
+          type: 'auto',
+          scrollbarSize: 8,
+        }
+      },
+    }),
+  },
 });
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
