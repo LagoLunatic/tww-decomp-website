@@ -156,12 +156,12 @@ export function Functions() {
               <Stack>
                 <Flex gap={"lg"}>
                   {stats.map((x) => (
-                    <StatisticsCard {...x} />
+                    <StatisticsCard key={x.title} {...x} />
                   ))}
                 </Flex>
                 <Flex gap={"lg"}>
                   {fnStats.map((x) => (
-                    <StatisticsCard {...x} />
+                    <StatisticsCard key={x.title} {...x} />
                   ))}
                 </Flex>
               </Stack>
