@@ -10,17 +10,17 @@ export function About() {
     <Container id="main" size={"lg"}>
       <Stack>
         <div>
-          <h1>Battle for Bikini Bottom Decompilation Project</h1>
+          <h1>The Wind Waker Decompilation Project</h1>
           <div>
             <p>
-              An effort to reverse engineer the 2003 game "
+              An effort to reverse engineer the 2002 game "
               <Anchor
-                href="https://en.wikipedia.org/wiki/SpongeBob_SquarePants:_Battle_for_Bikini_Bottom"
+                href="https://en.wikipedia.org/wiki/The_Legend_of_Zelda:_The_Wind_Waker"
                 target={"_blank"}
               >
-                SpongeBob SquarePants: Battle for Bikini Bottom
+                The Legend of Zelda: The Wind Waker
               </Anchor>
-              " (often abbreviated as BFBB). This project aims to decompile the
+              " (often abbreviated as TWW). This project aims to decompile the
               game's original binary code back into its source code form.
             </p>
           </div>
@@ -47,7 +47,7 @@ export function About() {
             </div>
           </Group>
           <div>
-            <h2>3. C++ Source Code:</h2>
+            <h2>3. C++ Source Code</h2>
             <CodeHighlight
               code={cppFunction}
               language={"cpp"}

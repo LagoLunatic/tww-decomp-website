@@ -19,16 +19,12 @@ export const GameFunctions: FileFunction[] = ProgressReport.units.flatMap((x) =>
 );
 
 const FileNames = [...new Set(GameFunctions.map((x) => FileName(x.path)))];
-const Opcodes = [...new Set(GameFunctions.flatMap((x) => x.opcodes))].sort(
-  (a, b) => a.localeCompare(b)
-);
 
 enum FnSort {
   Size = "Size",
   Matched = "Matched",
   Address = "Address",
   Name = "Name",
-  Labels = "Labels",
 }
 
 const sortFunctions: Record<
@@ -36,7 +32,6 @@ const sortFunctions: Record<
   (a: FileFunction, b: FileFunction) => number
 > = {
   [FnSort.Address]: (a, b) => b.address.localeCompare(a.address),
-  [FnSort.Labels]: (a, b) => b.labels - a.labels,
   [FnSort.Matched]: (a, b) => b.fuzzy_match_percent - a.fuzzy_match_percent,
   [FnSort.Name]: (a, b) => a.name.localeCompare(b.name),
   [FnSort.Size]: (a, b) => b.size - a.size,
@@ -62,7 +57,6 @@ export function Functions() {
   const [searchText, setSearchText] = useState("");
   const [fileFilter, setFileFilter] = useState<string[]>([]);
   const [sortFn, setSortFn] = useState<FnSort>();
-  const [opcodeFilter, setOpcodeFilter] = useState<string[]>([]);
 
   const search = searchText.toLowerCase();
 
@@ -73,11 +67,7 @@ export function Functions() {
       x.path.toLowerCase().includes(search) ||
       (x.demangled_name && x.demangled_name.toLowerCase().includes(search))
   )
-    .filter((x) => !fileFilter.length || fileFilter.includes(FileName(x.path)))
-    .filter(
-      (x) =>
-        !opcodeFilter.length || x.opcodes.some((o) => opcodeFilter.includes(o))
-    );
+    .filter((x) => !fileFilter.length || fileFilter.includes(FileName(x.path)));
   const items = sortFn
     ? filteredItems.sort(sortFunctions[sortFn])
     : filteredItems;
@@ -150,15 +140,6 @@ export function Functions() {
                 placeholder="Filter by Files"
                 data={FileNames}
                 onChange={setFileFilter}
-                searchable
-              />
-            </Group>
-            <Group grow>
-              <MultiSelect
-                label="Opcode Filter"
-                placeholder="Filter Functions by Opcode(s)"
-                data={Opcodes}
-                onChange={setOpcodeFilter}
                 searchable
               />
               <Select

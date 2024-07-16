@@ -38,29 +38,56 @@ export function OverallProgress() {
   };
 
   const gcUnits = ProgressReport.units.filter((x) =>
-    x.name.toLowerCase().includes("/gc/")
+    x.name.includes("/dolphin/") ||
+    x.name.includes("/PowerPC_EABI_Support/") ||
+    x.name.includes("/TRK_MINNOW_DOLPHIN/") ||
+    x.name.includes("/amcstubs/") ||
+    x.name.includes("/OdemuExi2/") ||
+    x.name.includes("/odenotstub/")
   );
-  const xUnits = ProgressReport.units.filter((x) =>
-    x.name.toLowerCase().includes("/x/")
+  const engineUnits = ProgressReport.units.filter((x) =>
+    x.name.includes("/m_Do/") ||
+    x.name.includes("/f_ap/") ||
+    x.name.includes("/f_op/") ||
+    x.name.includes("/f_pc/") ||
+    x.name.includes("/SSystem/") ||
+    x.name.includes("/JSystem/") ||
+    x.name == "framework/DynamicLink" ||
+    x.name == "framework/c/c_dylink"
   );
   const gameUnits = ProgressReport.units.filter((x) =>
-    x.name.toLowerCase().includes("/game/")
+    x.name.includes("/d/") ||
+    x.name.includes("/JAZelAudio/") ||
+    x.name == "framework/c/c_damagereaction"
+  );
+  const otherUnits = ProgressReport.units.filter((x) =>
+    !gcUnits.includes(x) &&
+    !engineUnits.includes(x) &&
+    !gameUnits.includes(x)
   );
 
   const allFolders = [
     {
-      name: "GameCube Specific Code",
-      units: gcUnits,
+      name: "TWW Game Code",
+      units: gameUnits,
     },
     {
       name: "Core Game Engine",
-      units: xUnits,
+      units: engineUnits,
     },
     {
-      name: "BFBB Game Code",
-      units: gameUnits,
+      name: "GameCube Specific Code",
+      units: gcUnits,
     },
   ];
+  if (otherUnits.length > 0) {
+    allFolders.push(
+      {
+        name: "Unsorted Code",
+        units: otherUnits,
+      },
+    );
+  }
 
   const onFileClick = (name: string) => {
     const unit = ProgressReport.units.find((x) => x.name === name);
@@ -101,7 +128,7 @@ export function OverallProgress() {
       <Stack gap={"md"}>
         <div>
           <h1>
-            Battle for Bikini Bottom is {prettyPercent(total_percent)}{" "}
+            The Legend of Zelda: The Wind Waker is {prettyPercent(total_percent)}{" "}
             decompiled
           </h1>
           <ProgressBar {...progressBar} />

@@ -1,8 +1,13 @@
-uint32 BbowlTossEndCB(xAnimTransition* tran, xAnimSingle* anim, void* param_3)
-{
-    xEntBoulder_BubbleBowl(sBubbleBowlMultiplier);
-    globals.player.IsBubbleBowling = false;
-    zEntPlayer_SNDStop(ePlayerSnd_BowlWindup);
-    zEntPlayer_SNDPlay(ePlayerSnd_BowlRelease, lbl_803CD5A0);
-    return false;
+BOOL daPy_lk_c::procCall_init() {
+    commonProcInit(daPyProc_CALL_e);
+    mVelocity = 0.0f;
+    daPy_matAnm_c::offMabaFlg();
+    daPy_matAnm_c::setMabaTimer(1);
+    setSingleMoveAnime(ANM_YOBU, 1.0f, 0.0f, -1, daPy_HIO_basic_c0::m.field_0xC);
+    current.angle.y = shape_angle.y;
+    if (mEquipItem == daPyItem_BOKO_e) {
+        deleteEquipItem(FALSE);
+    }
+    voiceStart(0x2A);
+    return TRUE;
 }

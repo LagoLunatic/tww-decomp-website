@@ -1,6 +1,8 @@
-# BFBB Decompilation Website
+# TWW Decompilation Website
 
-A website to track the progress and show other data related to the [BFBB Decompilation Project](https://github.com/bfbbdecomp/bfbb).
+A website to track the progress and show other data related to the [The Legend of Zelda: The Wind Waker Decompilation Project](https://github.com/zeldaret/tww).
+
+This website code is forked from the [website for the SpongeBob SquarePants: Battle for Bikini Bottom Decompilation Project](https://github.com/bfbbdecomp/website).
 
 It is written in
 [TypeScript](https://www.typescriptlang.org/)

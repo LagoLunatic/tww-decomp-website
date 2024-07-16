@@ -11,7 +11,7 @@ var asmInfo = JsonHelper.Deserialize<List<AsmInfo>>(asmInfoText);
 
 var gameReport =
     new Report(Units: report.Units
-        .Where(unit => unit.Name.Contains("/sb/", StringComparison.CurrentCultureIgnoreCase))
+        .Where(unit => !unit.Name.Contains("/REL/")) // Exclude executor and global_destructor_chain
         .Select(unit => unit with
         {
             Functions = unit.Functions.Select(fn => fn with
@@ -22,7 +22,7 @@ var gameReport =
         })
         .ToList());
 
-List<string> sampleUnits = ["zEntPlayer"];
+List<string> sampleUnits = ["d_a_player_main"];
 
 var tsSample = gameReport with
 {

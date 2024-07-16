@@ -38,7 +38,7 @@ function App() {
                 <UnstyledButton
                   component="a"
                   target={"_blank"}
-                  href="https://github.com/bfbbdecomp/bfbb"
+                  href="https://github.com/zeldaret/tww"
                 >
                   <IconBrandGithubFilled size={"1.5rem"} stroke={1.5} />
                 </UnstyledButton>
@@ -47,7 +47,7 @@ function App() {
                 <UnstyledButton
                   component="a"
                   target={"_blank"}
-                  href="https://discord.gg/dVbGFdYU6A"
+                  href="https://discord.com/invite/DqwyCBYKqf/"
                 >
                   <IconBrandDiscordFilled size={"1.5rem"} stroke={1.5} />
                 </UnstyledButton>

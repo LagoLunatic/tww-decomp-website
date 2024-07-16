@@ -14,9 +14,9 @@ export const FileName = (path: string): string => {
 
 export function GithubLink(path: string): string {
   return (
-    "https://github.com/bfbbdecomp/bfbb/blob/main/src/" +
-    path.replace("main/", "") +
-    ".cpp"
+    "https://github.com/zeldaret/tww/blob/main/src/" +
+    path.replace("framework/", "") +
+    ".cpp" // TODO: this won't work for C files
   );
 }
 
@@ -64,7 +64,7 @@ const FunctionInfo = (fn: FileFunction) => {
         <Anchor href={GithubLink(fn.path)} target="_blank">
           {FileName(fn.path)}
         </Anchor>{" "}
-        / {fn.address} / size: {fn.size} / labels: {fn.labels}
+        / {fn.address} / size: {fn.size}
       </Text>
       <ProgressBar {...progress} />
     </div>

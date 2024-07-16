@@ -1,21 +1,44 @@
-.fn BbowlTossEndCB__FP15xAnimTransitionP11xAnimSinglePv, local
+.fn procCall_init__9daPy_lk_cFv, global
 stwu r1, -0x10(r1)
 mflr r0
 stw r0, 0x14(r1)
-lfs f1, sBubbleBowlMultiplier@sda21(r0)
-bl xEntBoulder_BubbleBowl__Ff
-lis r3, globals@ha
+stw r31, 0xc(r1)
+mr r31, r3
+li r4, 0x2
+bl commonProcInit__9daPy_lk_cFQ29daPy_lk_c9daPy_PROC
+lfs f2, "@4966"@sda21(r0)
+stfs f2, 0x35bc(r31)
 li r0, 0x0
-addi r4, r3, globals@l
-li r3, 0x4
-stw r0, 0x1aec(r4)
-bl zEntPlayer_SNDStop__F14_tagePlayerSnd
-lfs f1, "@976"@sda21(r0)
-li r3, 0x5
-bl zEntPlayer_SNDPlay__F14_tagePlayerSndf
+stb r0, m_maba_flg__13daPy_matAnm_c@sda21(r0)
+li r0, 0x1
+stb r0, m_maba_timer__13daPy_matAnm_c@sda21(r0)
+mr r3, r31
+li r4, 0xc2
+lfs f1, "@4968"@sda21(r0)
+li r5, -0x1
+lis r6, m__17daPy_HIO_basic_c0@ha
+addi r6, r6, m__17daPy_HIO_basic_c0@l
+lfs f3, 0xc(r6)
+bl setSingleMoveAnime__9daPy_lk_cFQ29daPy_lk_c8daPy_ANMffsf
+lha r0, 0x20e(r31)
+sth r0, 0x206(r31)
+lhz r0, 0x3560(r31)
+cmplwi r0, 0x101
+bne .L_80112C60
+mr r3, r31
+li r4, 0x0
+bl deleteEquipItem__9daPy_lk_cFi
+.L_80112C60:
+mr r3, r31
+li r4, 0x2a
+lwz r12, 0x31c(r31)
+lwz r12, 0x6c(r12)
+mtctr r12
+bctrl
+li r3, 0x1
+lwz r31, 0xc(r1)
 lwz r0, 0x14(r1)
-li r3, 0x0
 mtlr r0
 addi r1, r1, 0x10
 blr
-.endfn BbowlTossEndCB__FP15xAnimTransitionP11xAnimSinglePv
+.endfn procCall_init__9daPy_lk_cFv
