@@ -175,7 +175,7 @@ export function OverallProgress() {
             <Tabs defaultValue="TWW Game Code">
               <Tabs.List>
               {allFolders.map((folder, index) => (
-                <Tabs.Tab value={folder.name}>
+                <Tabs.Tab key={index} value={folder.name}>
                   {folder.name}
                 </Tabs.Tab>
               ))}
