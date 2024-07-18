@@ -20,7 +20,8 @@ import { FileMetric, metricData } from "./FileMetric";
 export function OverallProgress() {
   const total_percent = ProgressReport.matched_code_percent;
   const fuzzy_percent = ProgressReport.fuzzy_match_percent;
-  const [unit, setUnit] = useState<Unit | undefined>(ProgressReport.units[0]);
+  const defaultUnit = ProgressReport.units.find(unit => unit.name == "framework/d/actor/d_a_player_main") || ProgressReport.units[0];
+  const [unit, setUnit] = useState<Unit | undefined>(defaultUnit);
   const [sortMetric, setSortMetric] = useState<FileMetric | null>(null);
   const [highlightMetric, setHighlightMetric] = useState<FileMetric | null>(
     FileMetric.FuzzyPercent
