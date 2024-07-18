@@ -24,6 +24,7 @@ import 'uplot/dist/uPlot.min.css';
 export function OverallProgress() {
   const total_percent = ProgressReport.matched_code_percent;
   const fuzzy_percent = ProgressReport.fuzzy_match_percent;
+  const [linked_percent, set_linked_percent] = useState(0.0);
   const defaultUnit = ProgressReport.units.find(unit => unit.name == "framework/d/actor/d_a_player_main") || ProgressReport.units[0];
   const [unit, setUnit] = useState<Unit | undefined>(defaultUnit);
   const [sortMetric, setSortMetric] = useState<FileMetric | null>(null);
@@ -38,6 +39,9 @@ export function OverallProgress() {
 
   const progressBar: ProgressBarProps = {
     size: 40,
+    linked: {
+      percentage: linked_percent,
+    },
     current: {
       percentage: ProgressReport.matched_code_percent,
     },
@@ -176,6 +180,7 @@ export function OverallProgress() {
           const linkedBytes = latestEntry.measures.code + latestEntry.measures.data;
           const totalBytes = latestEntry.measures["code/total"] + latestEntry.measures["data/total"];
           const linkedPercent = 100 * (linkedBytes / totalBytes);
+          set_linked_percent(linkedPercent);
           linkedSpan.textContent = `(${prettyPercent(linkedPercent)} linked)`
         }
         return parseHistoryJson(res);

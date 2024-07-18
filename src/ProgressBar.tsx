@@ -8,17 +8,31 @@ type ProgressBarData = {
 };
 
 export type ProgressBarProps = {
+  linked?: ProgressBarData;
   current: ProgressBarData;
   fuzzy?: ProgressBarData;
   size?: number;
 };
 
 export function ProgressBar(props: ProgressBarProps) {
-  const { current, fuzzy, size } = props;
+  const { linked, current, fuzzy, size } = props;
 
   return (
     <div>
       <Progress.Root size={size ?? 25}>
+        {linked !== undefined && (
+          <Tooltip
+            label={
+              linked.label ?? prettyPercent(linked.percentage) + " Fully Linked"
+            }
+          >
+            <Progress.Section
+              animated={current.percentage == 100 ? false : true}
+              value={linked.percentage}
+              color={linked.color ?? "darkgreen"}
+            />
+          </Tooltip>
+        )}
         <Tooltip
           label={
             current.label ??
@@ -27,7 +41,7 @@ export function ProgressBar(props: ProgressBarProps) {
         >
           <Progress.Section
             animated={current.percentage == 100 ? false : true}
-            value={current.percentage}
+            value={current.percentage - (linked ? linked.percentage : 0)}
             color={current.color ?? "green"}
           />
         </Tooltip>
