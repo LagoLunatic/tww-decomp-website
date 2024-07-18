@@ -25,7 +25,9 @@
     "react-apexcharts": "^1.4.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.24.0",
-    "recharts": "^2.12.7"
+    "recharts": "^2.12.7",
+    "uplot": "^1.6.30",
+    "uplot-react": "^1.2.2"
   },
   "devDependencies": {
     "@types/chroma-js": "^2.4.4",

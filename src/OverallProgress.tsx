@@ -14,8 +14,12 @@ import { FileHeatmap } from "./FileHeatmap";
 
 import "./css/app.css";
 import { SourceFileInfo } from "./File";
-import { useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { FileMetric, metricData } from "./FileMetric";
+
+import uPlot from 'uplot';
+import UplotReact from 'uplot-react';
+import 'uplot/dist/uPlot.min.css';
 
 export function OverallProgress() {
   const total_percent = ProgressReport.matched_code_percent;
@@ -28,6 +32,9 @@ export function OverallProgress() {
   );
   const [fileFilter, setFileFilter] = useState("");
   const [functionFilter, setFunctionFilter] = useState("");
+  const [plotData, setPlotData] = useState<uPlot.AlignedData>([[Date.now() / 1000], [0.0], [0.0]]);
+  const [plotWidth, setPlotWidth] = useState(900);
+  const plotContainerRef = useRef<HTMLDivElement>(null);
 
   const progressBar: ProgressBarProps = {
     size: 40,
@@ -124,16 +131,136 @@ export function OverallProgress() {
     const { value } = metricData[sortMetric];
     return filtered.sort((a, b) => value(b) - value(a));
   }
+  
+  type ProgressHistoryEntry = {
+    timestamp: number,
+    measures: {
+      code: number,
+      "code/total": number,
+      data: number,
+      "data/total": number,
+    },
+  };
 
+  type ProgressHistory = {
+    tww: {
+      GZLE01: {
+        all: ProgressHistoryEntry[],
+        dol: ProgressHistoryEntry[],
+        modules: ProgressHistoryEntry[],
+      },
+    },
+  };
+
+  function parseHistoryJson(result: ProgressHistory): uPlot.AlignedData {
+    var timestamps: number[] = [];
+    var code_percentages: number[] = [];
+    var data_percentages: number[] = [];
+    result.tww.GZLE01.all.reverse().map((entry) => {
+      timestamps.push(entry.timestamp);
+      code_percentages.push(100 * (entry.measures.code / entry.measures["code/total"]));
+      data_percentages.push(100 * (entry.measures.data / entry.measures["data/total"]));
+    });
+    return [timestamps, code_percentages, data_percentages];
+  }
+
+  const progressHistoryUrl = "https://progress.decomp.club/data/tww/GZLE01/?mode=all";
+
+  useEffect(() => {
+    fetch(progressHistoryUrl)
+      .then(res => res.json())
+      .then((res: ProgressHistory) => {
+        const linkedSpan = document.getElementById("linked-percent");
+        if (linkedSpan != null) {
+          const latestEntry = res.tww.GZLE01.all[0];
+          const linkedBytes = latestEntry.measures.code + latestEntry.measures.data;
+          const totalBytes = latestEntry.measures["code/total"] + latestEntry.measures["data/total"];
+          const linkedPercent = 100 * (linkedBytes / totalBytes);
+          linkedSpan.textContent = `(${prettyPercent(linkedPercent)} linked)`
+        }
+        return parseHistoryJson(res);
+      })
+      .then(data => setPlotData(data));
+  }, [progressHistoryUrl]);
+
+  useLayoutEffect(() => {
+    if (plotContainerRef.current) {
+      setPlotWidth(plotContainerRef.current.getBoundingClientRect().width);
+    }
+  }, [plotContainerRef]);
+
+  useEffect(() => {
+    const observer = new ResizeObserver(entries => {
+      entries.forEach(entry => {
+          setPlotWidth(entry.contentRect.width);
+      });
+    });
+    if (plotContainerRef.current) {
+      observer.observe(plotContainerRef.current);
+    }
+    return () => observer.disconnect();
+  }, [plotContainerRef]);
+  
   return (
     <Container id="main" size={"lg"}>
       <Stack gap={"md"}>
         <div>
           <h1>
-            The Legend of Zelda: The Wind Waker is {prettyPercent(total_percent)}{" "}
-            decompiled
+            The Wind Waker is {prettyPercent(total_percent)}{" "}
+            decompiled <span id="linked-percent"></span>
           </h1>
           <ProgressBar {...progressBar} />
+        </div>
+        <div ref={plotContainerRef}>
+          <UplotReact
+            data={plotData}
+            options={{
+              width: plotWidth,
+              height: 370,
+              series: [
+                {
+                  label: "Date",
+                  value: (_, val) => val == null ? "--" : new Date(val * 1000).toLocaleDateString()
+                },
+                {
+                  label: "Linked Code",
+                  scale: "%",
+                  width: 3,
+                  stroke: "rgb(47, 158, 68)",
+                  value: (_, val) => val == null ? "--" : prettyPercent(val)
+                },
+                {
+                  label: "Linked Data",
+                  scale: "%",
+                  width: 3,
+                  stroke: "rgb(25, 113, 194)",
+                  value: (_, val) => val == null ? "--" : prettyPercent(val)
+                },
+              ],
+              axes: [
+                {
+                  stroke: "rgb(201, 201, 201)",
+                  grid: {show: false},
+                },
+                {
+                  stroke: "rgb(201, 201, 201)",
+                  scale: "%",
+                  incrs: [25,],
+                  values: (_, ticks) => ticks.map(val => val.toFixed(0) + "%"),
+                  grid: {
+                    stroke: "rgb(66, 66, 66)",
+                    width: 3,
+                  },
+                },
+              ],
+              scales: {
+                "%": {
+                  auto: true,
+                  range: [0, 100],
+                },
+              },
+            }}
+          />
         </div>
         <Group grow gap={"lg"} align={"flex-start"}>
           <Stack gap={"sm"}>
