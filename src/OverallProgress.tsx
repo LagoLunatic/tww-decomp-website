@@ -57,7 +57,7 @@ export function OverallProgress() {
       name: "Data",
       size: 40,
       linked: {
-        color: "darkblue",
+        color: "blue",
         percentage: linked_data_percent,
       },
       current: {

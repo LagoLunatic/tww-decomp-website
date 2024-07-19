@@ -23,13 +23,13 @@ export function ProgressBar(props: ProgressBarProps) {
         {linked !== undefined && (
           <Tooltip
             label={
-              linked.label ?? prettyPercent(linked.percentage) + " Fully Linked"
+              linked.label ?? prettyPercent(linked.percentage) + " Linked"
             }
           >
             <Progress.Section
-              animated={current.percentage == 100 ? false : true}
+              animated={false}
               value={linked.percentage}
-              color={linked.color ?? "darkgreen"}
+              color={linked.color ?? "green"}
             />
           </Tooltip>
         )}
@@ -40,7 +40,7 @@ export function ProgressBar(props: ProgressBarProps) {
           }
         >
           <Progress.Section
-            animated={current.percentage == 100 ? false : true}
+            animated={linked == null && current.percentage == 100 ? false : true}
             value={current.percentage - (linked ? linked.percentage : 0)}
             color={current.color ?? "green"}
           />
