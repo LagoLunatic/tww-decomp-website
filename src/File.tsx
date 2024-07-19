@@ -9,12 +9,17 @@ type SourceFileInfoProps = {
 };
 
 export function SourceFileInfo({ unit }: SourceFileInfoProps) {
-  const perfectMatch = (unit.matched_code / unit.total_code) * 100;
+  var perfectMatch = (unit.matched_code / unit.total_code) * 100;
   const fuzzyMatch = unit.fuzzy_match_percent - perfectMatch;
 
-  const dataMatch = unit.total_data
+  var dataMatch = unit.total_data
     ? (unit.matched_data / unit.total_data) * 100
     : 100;
+
+  if (unit.complete) {
+    perfectMatch = 100;
+    dataMatch = 100;
+  }
 
   const fns = GameFunctions.filter((x) => x.path === unit.name);
 
