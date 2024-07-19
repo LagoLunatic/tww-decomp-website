@@ -3,6 +3,7 @@ import {
   Select,
   Stack,
   Container,
+  Text,
   TextInput,
   ProgressSection,
   Tabs,
@@ -24,7 +25,8 @@ import 'uplot/dist/uPlot.min.css';
 export function OverallProgress() {
   const total_percent = ProgressReport.matched_code_percent;
   const fuzzy_percent = ProgressReport.fuzzy_match_percent;
-  const [linked_percent, set_linked_percent] = useState(0.0);
+  const [linked_code_percent, set_linked_code_percent] = useState(0.0);
+  const [linked_data_percent, set_linked_data_percent] = useState(0.0);
   const defaultUnit = ProgressReport.units.find(unit => unit.name == "framework/d/actor/d_a_player_main") || ProgressReport.units[0];
   const [unit, setUnit] = useState<Unit | undefined>(defaultUnit);
   const [sortMetric, setSortMetric] = useState<FileMetric | null>(null);
@@ -37,18 +39,33 @@ export function OverallProgress() {
   const [plotWidth, setPlotWidth] = useState(900);
   const plotContainerRef = useRef<HTMLDivElement>(null);
 
-  const progressBar: ProgressBarProps = {
-    size: 40,
-    linked: {
-      percentage: linked_percent,
+  const progressInfo: ({ name: string } & ProgressBarProps)[] = [
+    {
+      name: "Code",
+      size: 40,
+      linked: {
+        percentage: linked_code_percent,
+      },
+      current: {
+        percentage: ProgressReport.matched_code_percent,
+      },
+      fuzzy: {
+        percentage: fuzzy_percent,
+      },
     },
-    current: {
-      percentage: ProgressReport.matched_code_percent,
+    {
+      name: "Data",
+      size: 40,
+      linked: {
+        color: "darkblue",
+        percentage: linked_data_percent,
+      },
+      current: {
+        color: "blue",
+        percentage: ProgressReport.matched_data_percent,
+      },
     },
-    fuzzy: {
-      percentage: fuzzy_percent,
-    },
-  };
+  ];
 
   const gcUnits = ProgressReport.units.filter((x) =>
     x.name.includes("/dolphin/") ||
@@ -177,11 +194,11 @@ export function OverallProgress() {
         const linkedSpan = document.getElementById("linked-percent");
         if (linkedSpan != null) {
           const latestEntry = res.tww.GZLE01.all[0];
-          const linkedBytes = latestEntry.measures.code + latestEntry.measures.data;
-          const totalBytes = latestEntry.measures["code/total"] + latestEntry.measures["data/total"];
-          const linkedPercent = 100 * (linkedBytes / totalBytes);
-          set_linked_percent(linkedPercent);
-          linkedSpan.textContent = `(${prettyPercent(linkedPercent)} linked)`
+          const linkedCodePercent = 100 * (latestEntry.measures.code / latestEntry.measures["code/total"]);
+          const linkedDataPercent = 100 * (latestEntry.measures.data / latestEntry.measures["data/total"]);
+          set_linked_code_percent(linkedCodePercent);
+          set_linked_data_percent(linkedDataPercent);
+          linkedSpan.textContent = `(${prettyPercent(linkedCodePercent)} linked)`
         }
         return parseHistoryJson(res);
       })
@@ -214,7 +231,18 @@ export function OverallProgress() {
             The Wind Waker is {prettyPercent(total_percent)}{" "}
             decompiled <span id="linked-percent"></span>
           </h1>
-          <ProgressBar {...progressBar} />
+          <div>
+            {progressInfo.map((info, id) => (
+              <div key={id} style={{ marginBottom: "0.5rem" }}>
+                <Text size={"lg"}>{info.name}</Text>
+                <Group grow gap={"xl"}>
+                  <div key={id} style={{ textAlign: "center" }}>
+                    <ProgressBar {...info} />
+                  </div>
+                </Group>
+              </div>
+            ))}
+          </div>
         </div>
         <div ref={plotContainerRef}>
           <UplotReact
