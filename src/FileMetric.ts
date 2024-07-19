@@ -92,7 +92,7 @@ export const metricData: Record<FileMetric, FileMetricData> = {
     gradient: chroma.scale(["lightgray", "maroon"]),
   },
   [FileMetric.Complete]: {
-    description: "Completed",
+    description: "Linked",
     value: (unit) => (unit.complete ? 100 : 0),
     gradient: chroma.scale(["bf3030", "30bf30"]),
   },
