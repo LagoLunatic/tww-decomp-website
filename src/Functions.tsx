@@ -31,7 +31,7 @@ const sortFunctions: Record<
   FnSort,
   (a: FileFunction, b: FileFunction) => number
 > = {
-  [FnSort.Address]: (a, b) => Number(a.address) - Number(b.address),
+  [FnSort.Address]: (a, b) => Number(a.metadata.virtual_address) - Number(b.metadata.virtual_address),
   [FnSort.Matched]: (a, b) => b.fuzzy_match_percent - a.fuzzy_match_percent,
   [FnSort.Name]: (a, b) => a.name.localeCompare(b.name),
   [FnSort.Size]: (a, b) => b.size - a.size,
@@ -65,7 +65,7 @@ export function Functions() {
       !searchText ||
       x.name.toLowerCase().includes(search) ||
       x.path.toLowerCase().includes(search) ||
-      (x.demangled_name && x.demangled_name.toLowerCase().includes(search))
+      (x.metadata.demangled_name && x.metadata.demangled_name.toLowerCase().includes(search))
   )
     .filter((x) => !fileFilter.length || fileFilter.includes(FileName(x.path)));
   const items = sortFn

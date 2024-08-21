@@ -141,7 +141,7 @@ export function OverallProgress() {
             .some(
               (fn) =>
                 fn.name.toLowerCase().includes(functionFilter.toLowerCase()) ||
-                fn.demangled_name
+                fn.metadata.demangled_name
                   ?.toLowerCase()
                   .includes(functionFilter.toLowerCase())
             )

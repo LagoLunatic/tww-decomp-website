@@ -10,7 +10,8 @@ public abstract class JsonHelper
         PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower,
         PropertyNameCaseInsensitive = true,
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
-        WriteIndented = true
+        WriteIndented = true,
+        NumberHandling = JsonNumberHandling.AllowReadingFromString
     };
 
     public static T Deserialize<T>(string json)

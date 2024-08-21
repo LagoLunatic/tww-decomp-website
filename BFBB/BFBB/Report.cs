@@ -2,19 +2,19 @@ using System.Text.Json;
 
 namespace BFBB;
 
-public record Report(List<ReportUnit> Units, AsmFunction? AsmInfo = null)
+public record Report(List<ReportUnit> Units)
 {
-    public long TotalCode => Units.Select(x => x.TotalCode).Sum();
-    public long TotalData => Units.Select(x => x.TotalData).Sum();
-    public long TotalFunctions => Units.Select(x => x.TotalFunctions).Sum();
-    public long MatchedCode => Units.Select(x => x.MatchedCode).Sum();
-    public long MatchedData => Units.Select(x => x.MatchedData).Sum();
-    public long MatchedFunctions => Units.Select(x => x.MatchedFunctions).Sum();
+    public long TotalCode => Units.Select(x => x.Measures.TotalCode).Sum();
+    public long TotalData => Units.Select(x => x.Measures.TotalData).Sum();
+    public long TotalFunctions => Units.Select(x => x.Measures.TotalFunctions).Sum();
+    public long MatchedCode => Units.Select(x => x.Measures.MatchedCode).Sum();
+    public long MatchedData => Units.Select(x => x.Measures.MatchedData).Sum();
+    public long MatchedFunctions => Units.Select(x => x.Measures.MatchedFunctions).Sum();
 
     public float FuzzyMatchPercent => TotalCode switch
     {
         0 => 100,
-        _ => Units.Select(x => x.FuzzyMatchPercent * x.TotalCode).Sum() / TotalCode
+        _ => Units.Select(x => x.Measures.FuzzyMatchPercent * x.Measures.TotalCode).Sum() / TotalCode
     };
 
     public float MatchedCodePercent => TotalCode switch

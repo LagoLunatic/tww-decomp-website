@@ -4,21 +4,15 @@ var inputPath = args[0];
 var outPath = args[1];
 
 var progress = File.ReadAllText($"{inputPath}progress.json");
-var asmInfoText = File.ReadAllText($"{inputPath}asminfo.json");
 
 var report = JsonHelper.Deserialize<Report>(progress);
-var asmInfo = JsonHelper.Deserialize<List<AsmInfo>>(asmInfoText);
 
 var gameReport =
     new Report(Units: report.Units
         .Where(unit => !unit.Name.Contains("/REL/")) // Exclude executor and global_destructor_chain
         .Select(unit => unit with
         {
-            Functions = unit.Functions.Select(fn => fn with
-            {
-                Opcodes = asmInfo.FirstOrDefault(info => info.Name == fn.Name)?.Opcodes ?? null,
-                Labels = asmInfo.FirstOrDefault(info => info.Name == fn.Name)?.Labels ?? null,
-            }).ToList()
+            Functions = (unit.Functions != null ? unit.Functions.ToList() : new List<ReportItem>())
         })
         .ToList());
 

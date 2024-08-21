@@ -9,14 +9,14 @@ type SourceFileInfoProps = {
 };
 
 export function SourceFileInfo({ unit }: SourceFileInfoProps) {
-  var perfectMatch = (unit.matched_code / unit.total_code) * 100;
-  const fuzzyMatch = unit.fuzzy_match_percent;
+  var perfectMatch = (unit.measures.matched_code / unit.measures.total_code) * 100;
+  const fuzzyMatch = unit.measures.fuzzy_match_percent;
 
-  var dataMatch = unit.total_data
-    ? (unit.matched_data / unit.total_data) * 100
+  var dataMatch = unit.measures.total_data
+    ? (unit.measures.matched_data / unit.measures.total_data) * 100
     : 100;
 
-  if (unit.complete) {
+  if (unit.metadata.complete) {
     perfectMatch = 100;
     dataMatch = 100;
   }

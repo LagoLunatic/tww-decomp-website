@@ -54,7 +54,7 @@ const FunctionInfo = (fn: FileFunction) => {
         ...(progress.current.percentage == 100 ? completedStyle : {}),
       }}
     >
-      <Text fw={700}>{fn.demangled_name ?? fn.name}</Text>
+      <Text fw={700}>{fn.metadata.demangled_name ?? fn.name}</Text>
       <Text>
         <ActionIcon variant="subtle" onClick={() => copyClipboard(fn.name)}>
           <Tooltip label="Copy Mangled Name">
@@ -64,7 +64,7 @@ const FunctionInfo = (fn: FileFunction) => {
         <Anchor href={GithubLink(fn.path)} target="_blank">
           {FileName(fn.path)}
         </Anchor>{" "}
-        / {fn.address} / size: {fn.size}
+        / {fn.metadata.virtual_address} / size: {fn.size}
       </Text>
       <ProgressBar {...progress} />
     </div>
