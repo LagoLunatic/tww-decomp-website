@@ -9,7 +9,6 @@ var report = JsonHelper.Deserialize<Report>(progress);
 
 var gameReport =
     new Report(Units: report.Units
-        .Where(unit => !unit.Name.Contains("/REL/")) // Exclude executor and global_destructor_chain
         .Select(unit => unit with
         {
             Functions = (unit.Functions != null ? unit.Functions.ToList() : new List<ReportItem>())

@@ -90,10 +90,14 @@ export function OverallProgress() {
     x.name.includes("/JAZelAudio/") ||
     x.name == "framework/c/c_damagereaction"
   );
+  const hiddenUnits = ProgressReport.units.filter((x) =>
+    x.name.includes("/REL/") // executor and global_destructor_chain
+  );
   const otherUnits = ProgressReport.units.filter((x) =>
     !gcUnits.includes(x) &&
     !engineUnits.includes(x) &&
-    !gameUnits.includes(x)
+    !gameUnits.includes(x) &&
+    !hiddenUnits.includes(x)
   );
 
   const allFolders = [
