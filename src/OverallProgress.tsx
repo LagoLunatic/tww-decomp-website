@@ -35,7 +35,7 @@ export function OverallProgress() {
   );
   const [fileFilter, setFileFilter] = useState("");
   const [functionFilter, setFunctionFilter] = useState("");
-  const [plotData, setPlotData] = useState<uPlot.AlignedData>([[Date.now() / 1000], [0.0], [0.0]]);
+  const [plotData, setPlotData] = useState<uPlot.AlignedData>([[Date.now() / 1000], [0.0], [0.0], [0.0], [0.0]]);
   const [plotWidth, setPlotWidth] = useState(900);
   const plotContainerRef = useRef<HTMLDivElement>(null);
 
@@ -159,12 +159,24 @@ export function OverallProgress() {
   
   type ProgressHistoryEntry = {
     timestamp: number,
+    git_hash: string,
     measures: {
       code: number,
       "code/total": number,
       data: number,
       "data/total": number,
+      matched_code: number,
+      "matched_code/total": number,
+      matched_data: number,
+      "matched_data/total": number,
+      matched_functions: number,
+      "matched_functions/total": number,
+      fuzzy_match: number,
+      "fuzzy_match/total": number,
+      units: number,
+      "units/total": number,
     },
+    description: string,
   };
 
   type ProgressHistory = {
@@ -173,6 +185,10 @@ export function OverallProgress() {
         all: ProgressHistoryEntry[],
         dol: ProgressHistoryEntry[],
         modules: ProgressHistoryEntry[],
+        game: ProgressHistoryEntry[],
+        core: ProgressHistoryEntry[],
+        sdk: ProgressHistoryEntry[],
+        third_party: ProgressHistoryEntry[],
       },
     },
   };
@@ -181,12 +197,16 @@ export function OverallProgress() {
     var timestamps: number[] = [];
     var code_percentages: number[] = [];
     var data_percentages: number[] = [];
+    var matched_code_percentages: number[] = [];
+    var matched_data_percentages: number[] = [];
     result.tww.GZLE01.all.reverse().map((entry) => {
       timestamps.push(entry.timestamp);
       code_percentages.push(100 * (entry.measures.code / entry.measures["code/total"]));
       data_percentages.push(100 * (entry.measures.data / entry.measures["data/total"]));
+      matched_code_percentages.push(100 * (entry.measures.matched_code / entry.measures["matched_code/total"]));
+      matched_data_percentages.push(100 * (entry.measures.matched_data / entry.measures["matched_data/total"]));
     });
-    return [timestamps, code_percentages, data_percentages];
+    return [timestamps, code_percentages, data_percentages, matched_code_percentages, matched_data_percentages];
   }
 
   const progressHistoryUrl = "https://progress.decomp.club/data/tww/GZLE01/?mode=all";
@@ -271,6 +291,22 @@ export function OverallProgress() {
                   scale: "%",
                   width: 3,
                   stroke: "rgb(25, 113, 194)",
+                  value: (_, val) => val == null ? "--" : prettyPercent(val)
+                },
+                {
+                  label: "Decompiled Code",
+                  scale: "%",
+                  width: 3,
+                  stroke: "rgb(47, 158, 68)",
+                  dash: [8, 2],
+                  value: (_, val) => val == null ? "--" : prettyPercent(val)
+                },
+                {
+                  label: "Decompiled Data",
+                  scale: "%",
+                  width: 3,
+                  stroke: "rgb(25, 113, 194)",
+                  dash: [8, 2],
                   value: (_, val) => val == null ? "--" : prettyPercent(val)
                 },
               ],
