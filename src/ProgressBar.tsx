@@ -27,7 +27,7 @@ export function ProgressBar(props: ProgressBarProps) {
             }
           >
             <Progress.Section
-              animated={false}
+              striped={false}
               value={linked.percentage}
               color={linked.color ?? "green"}
             />
@@ -40,7 +40,7 @@ export function ProgressBar(props: ProgressBarProps) {
           }
         >
           <Progress.Section
-            animated={linked == null && current.percentage == 100 ? false : true}
+            striped={linked == null && current.percentage == 100 ? false : true}
             value={current.percentage - (linked ? linked.percentage : 0)}
             color={current.color ?? "green"}
           />
@@ -52,9 +52,9 @@ export function ProgressBar(props: ProgressBarProps) {
             }
           >
             <Progress.Section
-              animated
+              striped
               value={fuzzy.percentage - current.percentage}
-              color={fuzzy.color ?? "yellowgreen"}
+              color={fuzzy.color ?? "rgb(50, 50, 50)"}
             />
           </Tooltip>
         )}
