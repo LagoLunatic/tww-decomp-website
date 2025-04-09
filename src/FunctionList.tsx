@@ -1,7 +1,7 @@
 import { ActionIcon, Anchor, Pagination, Text, Tooltip } from "@mantine/core";
 import { GameFunction } from "./progress";
 import { ProgressBar, ProgressBarProps } from "./ProgressBar";
-import { prettyPercent } from "./helpers";
+import { prettyHex, prettyPercent } from "./helpers";
 import { useEffect, useState } from "react";
 import { IconAdjustments, IconClipboardCopy } from "@tabler/icons-react";
 import { notifications } from "@mantine/notifications";
@@ -64,7 +64,7 @@ const FunctionInfo = (fn: FileFunction) => {
         <Anchor href={GithubLink(fn.path)} target="_blank">
           {FileName(fn.path)}
         </Anchor>{" "}
-        / {fn.metadata.virtual_address} / size: {fn.size}
+        / {prettyHex(fn.metadata.virtual_address)} / size: {fn.size}
       </Text>
       <ProgressBar {...progress} />
     </div>
