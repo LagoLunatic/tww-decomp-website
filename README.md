@@ -17,8 +17,8 @@ to pre-process the progress/asm data before building the website.
 
 1. Install [nodejs](https://nodejs.org/en) and [dotnet](https://dotnet.microsoft.com/en-us/).
 
-Go to the [latest workflow runs](https://github.com/bfbbdecomp/bfbb/actions/workflows/build.yml)
-of BFBB. The main workflow builds the game and saves an artifact called `progress.json`. Download this zip file and extract it.
+Go to the [latest workflow runs](https://github.com/zeldaret/tww/actions/workflows/build.yml)
+of TWW. The main workflow builds the game and saves an artifact called `progress.json`. Download this zip file and extract it.
 
 2. Move the extracted `progress.json` into [/artifacts](./artifacts/)
 
