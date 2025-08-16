@@ -209,7 +209,7 @@ export function OverallProgress() {
     return [timestamps, code_percentages, data_percentages, matched_code_percentages, matched_data_percentages];
   }
 
-  const progressHistoryUrl = "https://progress.decomp.club/data/tww/GZLE01/?mode=all";
+  const progressHistoryUrl = "https://progress.decomp.club/data/tww/GZLE01/?mode=all&format=json";
 
   useEffect(() => {
     fetch(progressHistoryUrl)
