@@ -158,58 +158,47 @@ export function OverallProgress() {
   }
   
   type ProgressHistoryEntry = {
-    timestamp: number,
+    timestamp: string,
     git_hash: string,
     measures: {
-      code: number,
-      "code/total": number,
-      data: number,
-      "data/total": number,
+      fuzzy_match_percent: number,
+      total_code: number,
       matched_code: number,
-      "matched_code/total": number,
+      matched_code_percent: number,
+      total_data: number,
       matched_data: number,
-      "matched_data/total": number,
+      matched_data_percent: number,
+      total_functions: number,
       matched_functions: number,
-      "matched_functions/total": number,
-      fuzzy_match: number,
-      "fuzzy_match/total": number,
-      units: number,
-      "units/total": number,
+      matched_functions_percent: number,
+      complete_code: number,
+      complete_code_percent: number,
+      complete_data: number,
+      complete_data_percent: number,
+      total_units: number,
+      complete_units: number,
     },
-    description: string,
   };
 
-  type ProgressHistory = {
-    tww: {
-      GZLE01: {
-        all: ProgressHistoryEntry[],
-        dol: ProgressHistoryEntry[],
-        modules: ProgressHistoryEntry[],
-        game: ProgressHistoryEntry[],
-        core: ProgressHistoryEntry[],
-        sdk: ProgressHistoryEntry[],
-        third_party: ProgressHistoryEntry[],
-      },
-    },
-  };
+  type ProgressHistory = ProgressHistoryEntry[];
 
   function parseHistoryJson(result: ProgressHistory): uPlot.AlignedData {
     var timestamps: number[] = [];
-    var code_percentages: number[] = [];
-    var data_percentages: number[] = [];
+    var complete_code_percentages: number[] = [];
+    var complete_data_percentages: number[] = [];
     var matched_code_percentages: number[] = [];
     var matched_data_percentages: number[] = [];
-    result.tww.GZLE01.all.reverse().map((entry) => {
-      timestamps.push(entry.timestamp);
-      code_percentages.push(100 * (entry.measures.code / entry.measures["code/total"]));
-      data_percentages.push(100 * (entry.measures.data / entry.measures["data/total"]));
-      matched_code_percentages.push(100 * (entry.measures.matched_code / entry.measures["matched_code/total"]));
-      matched_data_percentages.push(100 * (entry.measures.matched_data / entry.measures["matched_data/total"]));
+    result.reverse().map((entry) => {
+      timestamps.push(Date.parse(entry.timestamp) / 1000);
+      complete_code_percentages.push(100 * (entry.measures.complete_code / entry.measures.total_code));
+      complete_data_percentages.push(100 * (entry.measures.complete_data / entry.measures.total_data));
+      matched_code_percentages.push(100 * (entry.measures.matched_code / entry.measures.total_code));
+      matched_data_percentages.push(100 * (entry.measures.matched_data / entry.measures.total_data));
     });
-    return [timestamps, code_percentages, data_percentages, matched_code_percentages, matched_data_percentages];
+    return [timestamps, complete_code_percentages, complete_data_percentages, matched_code_percentages, matched_data_percentages];
   }
 
-  const progressHistoryUrl = "https://progress.decomp.club/data/tww/GZLE01/?mode=all&format=json";
+  const progressHistoryUrl = "https://decomp.dev/zeldaret/tww.json?mode=history";
 
   useEffect(() => {
     fetch(progressHistoryUrl)
@@ -217,9 +206,9 @@ export function OverallProgress() {
       .then((res: ProgressHistory) => {
         const linkedSpan = document.getElementById("linked-percent");
         if (linkedSpan != null) {
-          const latestEntry = res.tww.GZLE01.all[0];
-          const linkedCodePercent = 100 * (latestEntry.measures.code / latestEntry.measures["code/total"]);
-          const linkedDataPercent = 100 * (latestEntry.measures.data / latestEntry.measures["data/total"]);
+          const latestEntry = res[0];
+          const linkedCodePercent = 100 * (latestEntry.measures.complete_code / latestEntry.measures.total_code);
+          const linkedDataPercent = 100 * (latestEntry.measures.complete_data / latestEntry.measures.total_data);
           set_linked_code_percent(linkedCodePercent);
           set_linked_data_percent(linkedDataPercent);
           linkedSpan.textContent = `(${prettyPercent(linkedCodePercent)} linked)`
